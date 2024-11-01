@@ -1,12 +1,14 @@
 {
-  "name": "tg-sol-bot",
+  "name": "sulino-bot",
   "version": "1.0.0",
+  "private": true,
   "type": "module",
   "main": "bot.js",
   "proxy": "http://localhost:3000",
   "scripts": {
-    "start": "node bot.js",
-    "dev": "nodemon bot.js"
+    "build": "cd webapp && npm install && npm run build",
+    "start": "cd webapp && npm start",
+    "dev": "cd webapp && npm run dev"
   },
   "keywords": [],
   "author": "",
