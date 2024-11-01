@@ -7,5 +7,8 @@ export default defineConfig({
     outDir: 'dist',
     assetsDir: 'assets',
     sourcemap: true
+  },
+  resolve: {
+    extensions: ['.js', '.jsx']
   }
 });
