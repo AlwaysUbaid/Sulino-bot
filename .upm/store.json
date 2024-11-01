@@ -1,0 +1,1 @@
+{"version":2,"languages":{"nodejs-npm":{"specfileHash":"64e922f7d11a9686ce7caece7676123d","lockfileHash":"08142db07bab84cd57d48b786b08050a","guessedImports":["dotenv","node-telegram-bot-api","@solana/web3.js","node-fetch"],"guessedImportsHash":"198813aeab2b550a7cd060f617060019"}}}

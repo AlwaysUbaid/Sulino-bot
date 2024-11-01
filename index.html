@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#000000">
+    <meta name="description" content="Sulino Trading - Trade Solana tokens and earn rewards">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <title>Sulino Trading</title>
+    
+    <!-- Telegram Webapp SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <style>
+        /* Hide scrollbar but allow scrolling */
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        
+        /* Smooth transitions */
+        .transition-all {
+            transition: all 0.3s ease;
+        }
+        
+        /* Loading animation */
+        .loading-pulse {
+            animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+        
+        /* Custom button styles */
+        .btn-primary {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            transition: transform 0.1s ease;
+        }
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+        
+        /* Price changes */
+        .price-up {
+            color: #10B981;
+        }
+        .price-down {
+            color: #EF4444;
+        }
+        
+        /* Card hover effects */
+        .token-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .token-card:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body class="h-full bg-gray-100 dark:bg-gray-900 overflow-hidden">
+    <!-- App Shell -->
+    <div id="root" class="h-full">
+        <!-- Initial Loading State -->
+        <div class="flex flex-col h-full">
+            <!-- Header -->
+            <header class="bg-white dark:bg-gray-800 shadow-sm z-10">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                    <div class="flex items-center justify-between">
+                        <h1 class="text-xl font-bold text-gray-900 dark:text-white">Sulino Trading</h1>
+                        <div id="wallet-status" class="text-sm text-gray-500 dark:text-gray-400">
+                            Connecting...
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-hidden">
+                <div class="h-full overflow-y-auto hide-scrollbar">
+                    <!-- Loading Skeleton -->
+                    <div class="p-4 space-y-4">
+                        <!-- Token Cards Loading State -->
+                        <div class="animate-pulse space-y-4">
+                            <div class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
+                                <div class="flex justify-between items-center">
+                                    <div class="space-y-2">
+                                        <div class="h-4 w-20 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                                        <div class="h-3 w-32 bg-gray-100 dark:bg-gray-600 rounded"></div>
+                                    </div>
+                                    <div class="h-8 w-24 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                                </div>
+                            </div>
+                            <div class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
+                                <div class="flex justify-between items-center">
+                                    <div class="space-y-2">
+                                        <div class="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                                        <div class="h-3 w-28 bg-gray-100 dark:bg-gray-600 rounded"></div>
+                                    </div>
+                                    <div class="h-8 w-24 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Bottom Navigation -->
+            <nav class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+                <div class="max-w-7xl mx-auto px-4">
+                    <div class="flex justify-around py-3">
+                        <button class="flex flex-col items-center text-blue-600 dark:text-blue-400">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                            </svg>
+                            <span class="text-xs mt-1">Trade</span>
+                        </button>
+                        <button class="flex flex-col items-center text-gray-400 dark:text-gray-500">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path>
+                            </svg>
+                            <span class="text-xs mt-1">Wallet</span>
+                        </button>
+                        <button class="flex flex-col items-center text-gray-400 dark:text-gray-500">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path>
+                            </svg>
+                            <span class="text-xs mt-1">Lottery</span>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <!-- App Scripts -->
+    <script type="module" src="webapp.js"></script>
+    
+    <!-- Initialize Telegram WebApp -->
+    <script>
+        window.addEventListener('load', () => {
+            if (window.Telegram?.WebApp) {
+                const tg = window.Telegram.WebApp;
+                tg.ready();
+                tg.expand();
+                
+                // Set theme based on Telegram theme
+                document.documentElement.classList.toggle('dark', tg.colorScheme === 'dark');
+            }
+        });
+    </script>
+</body>
+</html>
