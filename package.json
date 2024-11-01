@@ -6,9 +6,9 @@
   "main": "bot.js",
   "proxy": "http://localhost:3000",
   "scripts": {
-    "build": "cd webapp && npm install && npm run build",
-    "start": "cd webapp && npm start",
-    "dev": "cd webapp && npm run dev"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "keywords": [],
   "author": "",
@@ -21,7 +21,17 @@
     "express": "^4.18.2",
     "mongoose": "^7.6.3",
     "node-fetch": "^3.3.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "lucide-react": "^0.263.1",
+    "@vitejs/plugin-react": "^4.0.0",
+    "vite": "^4.3.9",
     "node-telegram-bot-api": "^0.63.0"
+  },
+    "devDependencies": {
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.24",
+    "tailwindcss": "^3.3.2"
   },
   "description": "Solana Trading Bot for Telegram"
 }
