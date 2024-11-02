@@ -9,6 +9,7 @@
     "start": "node bot.js",
     "dev:bot": "nodemon bot.js",
     "dev:web": "vite",
+    "dev:https": "node local-server.js",
     "build": "vite build",
     "preview": "vite preview"
   },

@@ -26,6 +26,25 @@ const bot = new TelegramBot(process.env.TELEGRAM_BOT_API_TOKEN, { polling: true 
 // Connect to Solana
 const connection = new Connection(process.env.SOLANA_RPC_URL || 'https://api.mainnet-beta.solana.com');
 
+bot.onText(/\/start/, (msg) => {
+    const chatId = msg.chat.id;
+    // Use HTTPS URL for production, secure localhost for development
+    const webAppUrl = process.env.NODE_ENV === 'production'
+        ? process.env.WEBAPP_URL
+        : 'https://sulino-bot.vercel.app'; // Replace with your Vercel deployment URL
+
+    bot.sendMessage(chatId, 'Welcome to Sulino Trading Bot! 🚀\n\nStart trading Solana tokens and earn rewards!', {
+        reply_markup: {
+            inline_keyboard: [[
+                {
+                    text: "🌟 Open Sulino App",
+                    web_app: { url: webAppUrl }
+                }
+            ]]
+        }
+    });
+});
+
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('MongoDB Connected'))

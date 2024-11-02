@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#000000">
-    <meta name="description" content="Sulino Trading - Trade Solana tokens and earn rewards">
+    <meta name="description" content="Sulino DEX - Trade Solana tokens, stake, and earn rewards with lottery entries">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
-    <title>Sulino Trading</title>
+    <title>Sulino DEX</title>
     
     <!-- Telegram Webapp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -19,80 +19,170 @@
     
     <!-- Custom Styles -->
     <style>
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-
-        /* General Transitions */
-        .transition-all { transition: all 0.3s ease; }
-
-        /* Navbar Styling */
-        .navbar { background: #1f2937; }
+        /* Navbar and General Styling */
+        .navbar { background: #1f2937; padding: 1rem; }
         .navbar-logo { font-weight: bold; color: #ffffff; font-size: 1.5rem; }
-        .nav-link { padding: 0.75rem; font-weight: medium; }
-        
-        /* Button Styles */
-        .btn-primary { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); transition: transform 0.1s ease; }
-        .btn-primary:active { transform: scale(0.98); }
+        .nav-link { color: #ffffff; padding: 0.75rem; font-weight: medium; cursor: pointer; }
+        .nav-link:hover { color: #7c3aed; }
+
+        /* Main Layout */
+        .home-section { max-width: 1200px; width: 100%; margin: auto; }
+        .section-heading { color: #ffffff; font-weight: bold; margin-bottom: 1rem; }
         
         /* Card and Panel Styles */
-        .card { background: #2d3748; padding: 1rem; border-radius: 0.75rem; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2); }
+        .card { background: #2d3748; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2); }
+        .stats-card { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: #ffffff; }
 
-        /* Animations */
-        .fade-in { animation: fadeIn 0.3s ease forwards; opacity: 0; }
-        @keyframes fadeIn { 100% { opacity: 1; } }
+        /* Advanced Styling */
+        .grid-card { background: #2f3542; padding: 1rem; border-radius: 0.5rem; text-align: center; color: #ffffff; }
+        .btn-primary { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: #ffffff; padding: 0.75rem; border-radius: 0.5rem; cursor: pointer; font-weight: bold; }
+        .btn-primary:active { transform: scale(0.98); }
     </style>
 </head>
 <body class="h-full bg-gray-100 dark:bg-gray-900 overflow-hidden">
 
     <!-- Navbar -->
-    <nav class="navbar flex justify-between items-center p-4 sticky top-0 z-10 shadow-lg">
+    <nav class="navbar flex justify-between items-center sticky top-0 z-10 shadow-lg">
         <!-- Logo -->
-        <div class="navbar-logo">Sulino</div>
+        <div class="navbar-logo">Sulino DEX</div>
         <!-- Navigation Links -->
         <div class="flex items-center space-x-4">
-            <button class="btn-primary py-2 px-4 rounded-lg text-white" onclick="connectWallet()">Connect Wallet</button>
-            <button class="nav-link text-white" onclick="showPanel('trade')">Trade</button>
-            <button class="nav-link text-white" onclick="showPanel('stake')">Stake</button>
-            <button class="nav-link text-white" onclick="showPanel('lottery')">Lottery</button>
+            <button class="btn-primary" onclick="connectWallet()">Connect Wallet</button>
+            <span class="nav-link" onclick="showPage('home')">Home</span>
+            <span class="nav-link" onclick="showPage('trade')">Trade</span>
+            <span class="nav-link" onclick="showPage('stake')">Stake</span>
+            <span class="nav-link" onclick="showPage('lottery')">Lottery</span>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <div id="root" class="flex flex-col items-center p-4 space-y-4 h-screen overflow-y-auto hide-scrollbar">
-        <!-- Welcome Banner -->
-        <div class="w-full max-w-md card text-center fade-in">
-            <h1 class="text-xl font-bold text-white">Welcome to Sulino Trading</h1>
-            <p class="text-sm text-gray-300">Trade, Stake & Participate in Lottery Rewards</p>
+    <div id="root" class="flex flex-col items-center p-4 h-screen overflow-y-auto hide-scrollbar">
+        
+        <!-- Homepage -->
+        <div id="homePage" class="home-section space-y-4">
+            <!-- Welcome Section -->
+            <div class="card text-center space-y-2">
+                <h1 class="text-2xl font-bold text-white">Welcome to Sulino DEX</h1>
+                <p class="text-gray-300">Trade, stake, and earn rewards with lottery entries on the Sulino platform.</p>
+                <button class="btn-primary w-40 mx-auto" onclick="connectWallet()">Get Started</button>
+            </div>
+            
+            <!-- Statistics Section -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="stats-card p-4 rounded-lg text-center">
+                    <h2 class="text-lg font-semibold">Total Volume (24h)</h2>
+                    <p class="text-2xl font-bold">$1,235,000</p>
+                </div>
+                <div class="stats-card p-4 rounded-lg text-center">
+                    <h2 class="text-lg font-semibold">Total Staked</h2>
+                    <p class="text-2xl font-bold">50,000 SOL</p>
+                </div>
+                <div class="stats-card p-4 rounded-lg text-center">
+                    <h2 class="text-lg font-semibold">Total Lottery Entries</h2>
+                    <p class="text-2xl font-bold">4,320</p>
+                </div>
+            </div>
+
+            <!-- Featured Tokens & Top Pairs -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Featured Tokens -->
+                <div class="card">
+                    <h2 class="section-heading">Featured Tokens</h2>
+                    <table class="w-full text-white text-sm">
+                        <thead>
+                            <tr>
+                                <th class="text-left">Token</th>
+                                <th>Price</th>
+                                <th>24h Change</th>
+                                <th>Volume</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>SOL (Solana)</td>
+                                <td>$25.65</td>
+                                <td class="text-green-500">+3.21%</td>
+                                <td>$500,000</td>
+                            </tr>
+                            <tr>
+                                <td>USDT (Tether)</td>
+                                <td>$1.00</td>
+                                <td class="text-gray-400">0.00%</td>
+                                <td>$300,000</td>
+                            </tr>
+                            <tr>
+                                <td>SRM (Serum)</td>
+                                <td>$2.50</td>
+                                <td class="text-red-500">-1.45%</td>
+                                <td>$200,000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Top Pairs -->
+                <div class="card">
+                    <h2 class="section-heading">Top Trading Pairs</h2>
+                    <table class="w-full text-white text-sm">
+                        <thead>
+                            <tr>
+                                <th class="text-left">Pair</th>
+                                <th>Price</th>
+                                <th>24h Volume</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>SOL/USDT</td>
+                                <td>$25.65</td>
+                                <td>$500,000</td>
+                            </tr>
+                            <tr>
+                                <td>SRM/USDT</td>
+                                <td>$2.50</td>
+                                <td>$200,000</td>
+                            </tr>
+                            <tr>
+                                <td>SOL/SRM</td>
+                                <td>10.26 SRM</td>
+                                <td>$150,000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Recent Transactions & User Activity -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Recent Transactions -->
+                <div class="card">
+                    <h2 class="section-heading">Recent Transactions</h2>
+                    <ul class="text-white text-sm space-y-2">
+                        <li>Buy 100 SOL at $25.65 (User1)</li>
+                        <li>Sell 200 USDT at $1.00 (User2)</li>
+                        <li>Buy 50 SRM at $2.50 (User3)</li>
+                        <li>Sell 75 SOL at $25.70 (User4)</li>
+                        <li>Buy 300 SRM at $2.55 (User5)</li>
+                    </ul>
+                </div>
+
+                <!-- User Activity -->
+                <div class="card">
+                    <h2 class="section-heading">User Activity</h2>
+                    <ul class="text-white text-sm space-y-2">
+                        <li>User1 staked 100 SOL</li>
+                        <li>User2 entered the lottery with 20 entries</li>
+                        <li>User3 placed a buy order for 50 SOL</li>
+                        <li>User4 staked 200 SRM</li>
+                        <li>User5 withdrew 100 USDT</li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
-        <!-- Panels Container -->
-        <!-- Trade Panel -->
-        <div id="tradePanel" class="hidden w-full max-w-md card fade-in">
-            <h2 class="text-lg font-semibold text-white">Trade Tokens</h2>
-            <p class="text-gray-400 text-sm mt-1">Trade your Solana tokens with ease.</p>
-            <input type="text" placeholder="Token Symbol" class="w-full mt-4 p-2 rounded-lg bg-gray-700 text-white placeholder-gray-400" />
-            <input type="number" placeholder="Amount" class="w-full mt-2 p-2 rounded-lg bg-gray-700 text-white placeholder-gray-400" />
-            <button class="btn-primary text-white py-2 px-4 rounded-lg w-full mt-4" onclick="handleTrade()">Trade Now</button>
-        </div>
-        
-        <!-- Stake Panel -->
-        <div id="stakePanel" class="hidden w-full max-w-md card fade-in">
-            <h2 class="text-lg font-semibold text-white">Stake Tokens</h2>
-            <p class="text-gray-400 text-sm mt-1">Stake your tokens to increase your lottery odds.</p>
-            <input type="number" placeholder="Amount to Stake" class="w-full mt-4 p-2 rounded-lg bg-gray-700 text-white placeholder-gray-400" />
-            <button class="btn-primary text-white py-2 px-4 rounded-lg w-full mt-4" onclick="handleStake()">Stake Now</button>
-        </div>
-        
-        <!-- Lottery Panel -->
-        <div id="lotteryPanel" class="hidden w-full max-w-md card fade-in">
-            <h2 class="text-lg font-semibold text-white">Lottery</h2>
-            <p class="text-gray-400 text-sm mt-1">Participate in weekly lotteries with amazing rewards.</p>
-            <div class="flex items-center justify-between mt-4">
-                <span class="text-gray-300 text-sm">Your Entries:</span>
-                <span id="lotteryEntries" class="text-white font-semibold">0</span>
-            </div>
-            <button class="btn-primary text-white py-2 px-4 rounded-lg w-full mt-4" onclick="checkLotteryStatus()">Check Status</button>
-        </div>
+        <!-- Other Pages (Trade, Stake, Lottery) - Hidden by Default -->
+        <!-- Add your tradePage, stakePage, and lotteryPage content here as needed -->
+
     </div>
 
     <!-- JS Scripts -->
@@ -108,29 +198,18 @@
             }
         });
 
-        // Panel Display Logic
-        function showPanel(panelId) {
-            // Hide all panels and apply fade-in effect to the selected panel
-            document.querySelectorAll('.card').forEach(panel => panel.classList.add('hidden'));
-            document.getElementById(panelId + 'Panel').classList.remove('hidden');
-            document.getElementById(panelId + 'Panel').classList.add('fade-in');
+        // Page Display Logic
+        function showPage(pageId) {
+            document.getElementById('homePage').classList.add('hidden');
+            document.getElementById('tradePage').classList.add('hidden');
+            document.getElementById('stakePage').classList.add('hidden');
+            document.getElementById('lotteryPage').classList.add('hidden');
+            document.getElementById(pageId + 'Page').classList.remove('hidden');
         }
 
         // Mock functions for bot features
         function connectWallet() {
             alert("Connecting wallet...");
-        }
-
-        function handleTrade() {
-            alert("Trading functionality coming soon!");
-        }
-
-        function handleStake() {
-            alert("Staking functionality coming soon!");
-        }
-
-        function checkLotteryStatus() {
-            document.getElementById('lotteryEntries').innerText = "You have X entries in this week's lottery!";
         }
     </script>
 </body>
