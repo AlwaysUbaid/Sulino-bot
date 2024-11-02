@@ -21,62 +21,77 @@
     <style>
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
-        
+
+        /* General Transitions */
         .transition-all { transition: all 0.3s ease; }
-        .loading-pulse { animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+
+        /* Navbar Styling */
+        .navbar { background: #1f2937; }
+        .navbar-logo { font-weight: bold; color: #ffffff; font-size: 1.5rem; }
+        .nav-link { padding: 0.75rem; font-weight: medium; }
         
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
-        
+        /* Button Styles */
         .btn-primary { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); transition: transform 0.1s ease; }
         .btn-primary:active { transform: scale(0.98); }
         
-        .price-up { color: #10B981; }
-        .price-down { color: #EF4444; }
-        
-        .token-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
-        .token-card:active { transform: scale(0.98); }
-        
-        /* Navbar Styling */
-        .navbar { background: #1f2937; }
-        .navbar-logo { font-weight: bold; color: #ffffff; font-size: 1.25rem; }
+        /* Card and Panel Styles */
+        .card { background: #2d3748; padding: 1rem; border-radius: 0.75rem; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2); }
+
+        /* Animations */
+        .fade-in { animation: fadeIn 0.3s ease forwards; opacity: 0; }
+        @keyframes fadeIn { 100% { opacity: 1; } }
     </style>
 </head>
 <body class="h-full bg-gray-100 dark:bg-gray-900 overflow-hidden">
+
     <!-- Navbar -->
-    <nav class="navbar flex justify-between items-center p-4">
+    <nav class="navbar flex justify-between items-center p-4 sticky top-0 z-10 shadow-lg">
         <!-- Logo -->
-        <div class="navbar-logo">Sulino Trading</div>
+        <div class="navbar-logo">Sulino</div>
         <!-- Navigation Links -->
         <div class="flex items-center space-x-4">
             <button class="btn-primary py-2 px-4 rounded-lg text-white" onclick="connectWallet()">Connect Wallet</button>
-            <button class="text-white" onclick="showPanel('trade')">Trade</button>
-            <button class="text-white" onclick="showPanel('stake')">Stake</button>
-            <button class="text-white" onclick="showPanel('lottery')">Lottery</button>
+            <button class="nav-link text-white" onclick="showPanel('trade')">Trade</button>
+            <button class="nav-link text-white" onclick="showPanel('stake')">Stake</button>
+            <button class="nav-link text-white" onclick="showPanel('lottery')">Lottery</button>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <div id="root" class="h-full">
+    <div id="root" class="flex flex-col items-center p-4 space-y-4 h-screen overflow-y-auto hide-scrollbar">
+        <!-- Welcome Banner -->
+        <div class="w-full max-w-md card text-center fade-in">
+            <h1 class="text-xl font-bold text-white">Welcome to Sulino Trading</h1>
+            <p class="text-sm text-gray-300">Trade, Stake & Participate in Lottery Rewards</p>
+        </div>
+
         <!-- Panels Container -->
-        <div class="flex flex-col items-center p-4 space-y-4 h-screen overflow-y-auto hide-scrollbar">
-            <!-- Trade Panel -->
-            <div id="tradePanel" class="hidden w-full max-w-md p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
-                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Trade Tokens</h2>
-                <button class="btn-primary text-white py-2 px-4 rounded-lg w-full mt-2" onclick="handleTrade()">Start Trading</button>
+        <!-- Trade Panel -->
+        <div id="tradePanel" class="hidden w-full max-w-md card fade-in">
+            <h2 class="text-lg font-semibold text-white">Trade Tokens</h2>
+            <p class="text-gray-400 text-sm mt-1">Trade your Solana tokens with ease.</p>
+            <input type="text" placeholder="Token Symbol" class="w-full mt-4 p-2 rounded-lg bg-gray-700 text-white placeholder-gray-400" />
+            <input type="number" placeholder="Amount" class="w-full mt-2 p-2 rounded-lg bg-gray-700 text-white placeholder-gray-400" />
+            <button class="btn-primary text-white py-2 px-4 rounded-lg w-full mt-4" onclick="handleTrade()">Trade Now</button>
+        </div>
+        
+        <!-- Stake Panel -->
+        <div id="stakePanel" class="hidden w-full max-w-md card fade-in">
+            <h2 class="text-lg font-semibold text-white">Stake Tokens</h2>
+            <p class="text-gray-400 text-sm mt-1">Stake your tokens to increase your lottery odds.</p>
+            <input type="number" placeholder="Amount to Stake" class="w-full mt-4 p-2 rounded-lg bg-gray-700 text-white placeholder-gray-400" />
+            <button class="btn-primary text-white py-2 px-4 rounded-lg w-full mt-4" onclick="handleStake()">Stake Now</button>
+        </div>
+        
+        <!-- Lottery Panel -->
+        <div id="lotteryPanel" class="hidden w-full max-w-md card fade-in">
+            <h2 class="text-lg font-semibold text-white">Lottery</h2>
+            <p class="text-gray-400 text-sm mt-1">Participate in weekly lotteries with amazing rewards.</p>
+            <div class="flex items-center justify-between mt-4">
+                <span class="text-gray-300 text-sm">Your Entries:</span>
+                <span id="lotteryEntries" class="text-white font-semibold">0</span>
             </div>
-            
-            <!-- Stake Panel -->
-            <div id="stakePanel" class="hidden w-full max-w-md p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
-                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Stake Tokens</h2>
-                <button class="btn-primary text-white py-2 px-4 rounded-lg w-full mt-2" onclick="handleStake()">Stake Now</button>
-            </div>
-            
-            <!-- Lottery Panel -->
-            <div id="lotteryPanel" class="hidden w-full max-w-md p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
-                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Lottery</h2>
-                <p id="lotteryEntries" class="text-sm text-gray-700 dark:text-gray-300">Checking your entries...</p>
-                <button class="btn-primary text-white py-1 px-2 rounded-lg mt-2" onclick="checkLotteryStatus()">Check Status</button>
-            </div>
+            <button class="btn-primary text-white py-2 px-4 rounded-lg w-full mt-4" onclick="checkLotteryStatus()">Check Status</button>
         </div>
     </div>
 
@@ -95,13 +110,10 @@
 
         // Panel Display Logic
         function showPanel(panelId) {
-            // Hide all panels
-            document.getElementById('tradePanel').classList.add('hidden');
-            document.getElementById('stakePanel').classList.add('hidden');
-            document.getElementById('lotteryPanel').classList.add('hidden');
-
-            // Show the selected panel
+            // Hide all panels and apply fade-in effect to the selected panel
+            document.querySelectorAll('.card').forEach(panel => panel.classList.add('hidden'));
             document.getElementById(panelId + 'Panel').classList.remove('hidden');
+            document.getElementById(panelId + 'Panel').classList.add('fade-in');
         }
 
         // Mock functions for bot features
