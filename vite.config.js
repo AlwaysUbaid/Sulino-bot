@@ -7,12 +7,16 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     rollupOptions: {
-      input: {
-        main: resolve(__dirname, 'index.html'),
-      },
+      input: resolve(__dirname, 'src/main.js'),  // Adjusted to point directly to main.js in src folder
+      external: [], // Add external dependencies here if necessary
     },
   },
   server: {
     port: 3000
+  },
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src')  // Allows '@' to act as an alias for 'src' folder
+    }
   }
 });
