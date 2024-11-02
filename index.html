@@ -19,90 +19,64 @@
     
     <!-- Custom Styles -->
     <style>
-        .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
         
-        .transition-all {
-            transition: all 0.3s ease;
-        }
+        .transition-all { transition: all 0.3s ease; }
+        .loading-pulse { animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
         
-        .loading-pulse {
-            animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
         
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: .5; }
-        }
+        .btn-primary { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); transition: transform 0.1s ease; }
+        .btn-primary:active { transform: scale(0.98); }
         
-        .btn-primary {
-            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-            transition: transform 0.1s ease;
-        }
-        .btn-primary:active {
-            transform: scale(0.98);
-        }
+        .price-up { color: #10B981; }
+        .price-down { color: #EF4444; }
         
-        .price-up {
-            color: #10B981;
-        }
-        .price-down {
-            color: #EF4444;
-        }
+        .token-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .token-card:active { transform: scale(0.98); }
         
-        .token-card {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .token-card:active {
-            transform: scale(0.98);
-        }
+        /* Navbar Styling */
+        .navbar { background: #1f2937; }
+        .navbar-logo { font-weight: bold; color: #ffffff; font-size: 1.25rem; }
     </style>
 </head>
 <body class="h-full bg-gray-100 dark:bg-gray-900 overflow-hidden">
-    <div id="root" class="h-full">
-        <!-- Main Container -->
-        <div class="flex flex-col items-center p-4 space-y-4 h-screen overflow-y-auto hide-scrollbar">
-            
-            <!-- Header -->
-            <header class="w-full text-center py-4">
-                <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">Sulino Trading</h1>
-                <p class="text-sm text-gray-600 dark:text-gray-400">Trade, Stake & Join the Lottery</p>
-            </header>
-            
-            <!-- Action Buttons -->
-            <div class="flex flex-col w-full max-w-sm space-y-2">
-                <button class="btn-primary text-white py-2 px-4 rounded-lg w-full" onclick="handleTrade()">Trade Tokens</button>
-                <button class="btn-primary text-white py-2 px-4 rounded-lg w-full" onclick="handleStake()">Stake Tokens</button>
-                <button class="btn-primary text-white py-2 px-4 rounded-lg w-full" onclick="viewLottery()">View Lottery</button>
-            </div>
-            
-            <!-- Wallet & Balance Display -->
-            <div class="w-full max-w-sm p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
-                <p class="text-sm text-gray-700 dark:text-gray-300">Wallet Balance:</p>
-                <p id="balance" class="text-lg font-semibold text-gray-900 dark:text-white">Loading...</p>
-            </div>
-            
-            <!-- Token Market Prices -->
-            <div class="w-full max-w-sm p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
-                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Token Prices</h2>
-                <div id="tokenPrices" class="space-y-2">
-                    <!-- Placeholder for token prices -->
-                    <p class="text-sm text-gray-700 dark:text-gray-300 loading-pulse">Fetching token prices...</p>
-                </div>
-            </div>
+    <!-- Navbar -->
+    <nav class="navbar flex justify-between items-center p-4">
+        <!-- Logo -->
+        <div class="navbar-logo">Sulino Trading</div>
+        <!-- Navigation Links -->
+        <div class="flex items-center space-x-4">
+            <button class="btn-primary py-2 px-4 rounded-lg text-white" onclick="connectWallet()">Connect Wallet</button>
+            <button class="text-white" onclick="showPanel('trade')">Trade</button>
+            <button class="text-white" onclick="showPanel('stake')">Stake</button>
+            <button class="text-white" onclick="showPanel('lottery')">Lottery</button>
+        </div>
+    </nav>
 
-            <!-- Lottery Status -->
-            <div class="w-full max-w-sm p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
-                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Lottery Status</h2>
+    <!-- Main Content -->
+    <div id="root" class="h-full">
+        <!-- Panels Container -->
+        <div class="flex flex-col items-center p-4 space-y-4 h-screen overflow-y-auto hide-scrollbar">
+            <!-- Trade Panel -->
+            <div id="tradePanel" class="hidden w-full max-w-md p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Trade Tokens</h2>
+                <button class="btn-primary text-white py-2 px-4 rounded-lg w-full mt-2" onclick="handleTrade()">Start Trading</button>
+            </div>
+            
+            <!-- Stake Panel -->
+            <div id="stakePanel" class="hidden w-full max-w-md p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Stake Tokens</h2>
+                <button class="btn-primary text-white py-2 px-4 rounded-lg w-full mt-2" onclick="handleStake()">Stake Now</button>
+            </div>
+            
+            <!-- Lottery Panel -->
+            <div id="lotteryPanel" class="hidden w-full max-w-md p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Lottery</h2>
                 <p id="lotteryEntries" class="text-sm text-gray-700 dark:text-gray-300">Checking your entries...</p>
                 <button class="btn-primary text-white py-1 px-2 rounded-lg mt-2" onclick="checkLotteryStatus()">Check Status</button>
             </div>
-
         </div>
     </div>
 
@@ -119,7 +93,22 @@
             }
         });
 
+        // Panel Display Logic
+        function showPanel(panelId) {
+            // Hide all panels
+            document.getElementById('tradePanel').classList.add('hidden');
+            document.getElementById('stakePanel').classList.add('hidden');
+            document.getElementById('lotteryPanel').classList.add('hidden');
+
+            // Show the selected panel
+            document.getElementById(panelId + 'Panel').classList.remove('hidden');
+        }
+
         // Mock functions for bot features
+        function connectWallet() {
+            alert("Connecting wallet...");
+        }
+
         function handleTrade() {
             alert("Trading functionality coming soon!");
         }
@@ -128,24 +117,9 @@
             alert("Staking functionality coming soon!");
         }
 
-        function viewLottery() {
-            alert("Lottery details coming soon!");
-        }
-
         function checkLotteryStatus() {
             document.getElementById('lotteryEntries').innerText = "You have X entries in this week's lottery!";
         }
-
-        // Fetch and display wallet balance and token prices (Mock implementation)
-        document.getElementById('balance').innerText = "100 SOL";
-        document.getElementById('tokenPrices').innerHTML = `
-            <div class="token-card p-2 border rounded-lg">
-                <p class="price-up">SOL: $150</p>
-            </div>
-            <div class="token-card p-2 border rounded-lg">
-                <p class="price-down">BTC: $50,000</p>
-            </div>
-        `;
     </script>
 </body>
 </html>
