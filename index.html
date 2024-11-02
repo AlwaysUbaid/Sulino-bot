@@ -19,7 +19,6 @@
     
     <!-- Custom Styles -->
     <style>
-        /* Hide scrollbar but allow scrolling */
         .hide-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
@@ -28,12 +27,10 @@
             display: none;
         }
         
-        /* Smooth transitions */
         .transition-all {
             transition: all 0.3s ease;
         }
         
-        /* Loading animation */
         .loading-pulse {
             animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
@@ -43,7 +40,6 @@
             50% { opacity: .5; }
         }
         
-        /* Custom button styles */
         .btn-primary {
             background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
             transition: transform 0.1s ease;
@@ -52,7 +48,6 @@
             transform: scale(0.98);
         }
         
-        /* Price changes */
         .price-up {
             color: #10B981;
         }
@@ -60,7 +55,6 @@
             color: #EF4444;
         }
         
-        /* Card hover effects */
         .token-card {
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
@@ -71,27 +65,87 @@
 </head>
 <body class="h-full bg-gray-100 dark:bg-gray-900 overflow-hidden">
     <div id="root" class="h-full">
-        <!-- Your loading UI will be replaced by React -->
-        <div class="flex items-center justify-center h-screen">
-            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+        <!-- Main Container -->
+        <div class="flex flex-col items-center p-4 space-y-4 h-screen overflow-y-auto hide-scrollbar">
+            
+            <!-- Header -->
+            <header class="w-full text-center py-4">
+                <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">Sulino Trading</h1>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Trade, Stake & Join the Lottery</p>
+            </header>
+            
+            <!-- Action Buttons -->
+            <div class="flex flex-col w-full max-w-sm space-y-2">
+                <button class="btn-primary text-white py-2 px-4 rounded-lg w-full" onclick="handleTrade()">Trade Tokens</button>
+                <button class="btn-primary text-white py-2 px-4 rounded-lg w-full" onclick="handleStake()">Stake Tokens</button>
+                <button class="btn-primary text-white py-2 px-4 rounded-lg w-full" onclick="viewLottery()">View Lottery</button>
+            </div>
+            
+            <!-- Wallet & Balance Display -->
+            <div class="w-full max-w-sm p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+                <p class="text-sm text-gray-700 dark:text-gray-300">Wallet Balance:</p>
+                <p id="balance" class="text-lg font-semibold text-gray-900 dark:text-white">Loading...</p>
+            </div>
+            
+            <!-- Token Market Prices -->
+            <div class="w-full max-w-sm p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Token Prices</h2>
+                <div id="tokenPrices" class="space-y-2">
+                    <!-- Placeholder for token prices -->
+                    <p class="text-sm text-gray-700 dark:text-gray-300 loading-pulse">Fetching token prices...</p>
+                </div>
+            </div>
+
+            <!-- Lottery Status -->
+            <div class="w-full max-w-sm p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Lottery Status</h2>
+                <p id="lotteryEntries" class="text-sm text-gray-700 dark:text-gray-300">Checking your entries...</p>
+                <button class="btn-primary text-white py-1 px-2 rounded-lg mt-2" onclick="checkLotteryStatus()">Check Status</button>
+            </div>
+
         </div>
     </div>
 
-    <!-- Change this to point to the new entry file -->
+    <!-- JS Scripts -->
     <script type="module" src="/src/main.js"></script>
 
-    <!-- Initialize Telegram WebApp -->
     <script>
         window.addEventListener('load', () => {
             if (window.Telegram?.WebApp) {
                 const tg = window.Telegram.WebApp;
                 tg.ready();
                 tg.expand();
-                
-                // Set theme based on Telegram theme
                 document.documentElement.classList.toggle('dark', tg.colorScheme === 'dark');
             }
         });
+
+        // Mock functions for bot features
+        function handleTrade() {
+            alert("Trading functionality coming soon!");
+        }
+
+        function handleStake() {
+            alert("Staking functionality coming soon!");
+        }
+
+        function viewLottery() {
+            alert("Lottery details coming soon!");
+        }
+
+        function checkLotteryStatus() {
+            document.getElementById('lotteryEntries').innerText = "You have X entries in this week's lottery!";
+        }
+
+        // Fetch and display wallet balance and token prices (Mock implementation)
+        document.getElementById('balance').innerText = "100 SOL";
+        document.getElementById('tokenPrices').innerHTML = `
+            <div class="token-card p-2 border rounded-lg">
+                <p class="price-up">SOL: $150</p>
+            </div>
+            <div class="token-card p-2 border rounded-lg">
+                <p class="price-down">BTC: $50,000</p>
+            </div>
+        `;
     </script>
 </body>
 </html>
